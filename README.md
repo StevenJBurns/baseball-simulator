@@ -2,6 +2,7 @@
 Baseball simulator javascript program
 
 On each run, simulates a baseball game between the Nationals and the Mets based on performance data by batting position over
-the course of a recent season.
+the course of a recent season. The outcome of the game is dispalyed in an alert, and the console displays the outcome of
+each at bat.
 
 Right now, it naively assumes that on a hit, each runner advances the same number of bases as the batter.
