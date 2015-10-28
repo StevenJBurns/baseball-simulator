@@ -200,4 +200,6 @@ var calcWalksPlusHBP = function(obp, avg){
   	}
 
     //Run game on click of runButton
-    $('#runButton').click(game);
+    $(document).ready(function() {
+      $('#runButton').click(game);
+    });
