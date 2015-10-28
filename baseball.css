@@ -29,3 +29,16 @@ button:active {
    border-top-color: #ff0000;
    background: #ff0000;
    }
+
+table, th, td {
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+
+table {
+	margin-top: 20px;
+}
+
+th, td {
+    padding: 5px;
+}

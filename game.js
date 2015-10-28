@@ -148,15 +148,19 @@ var calcWalksPlusHBP = function(obp, avg){
       team2Score = 0;
       nowBatting1 = 0;
       nowBatting2 = 0;
+      var team1lineScore = [];
+      var team2lineScore = [];
   		for (var i = 0; i < numInnings; i++){
   			inningOutcome = offensiveInning(team1,nowBatting1);
   			team1Score += inningOutcome[0];
+        team1lineScore.push(inningOutcome[0]);
   			nowBatting1 = inningOutcome[1];
   			console.log("In inning " + i + ", the Nats scored " + inningOutcome[0] + " and due up is Lineup Spot " + inningOutcome[1]);
   		}
   		for (var i = 0; i < numInnings; i++){
   			inningOutcome = offensiveInning(team2,nowBatting2);
   			team2Score += inningOutcome[0];
+        team2lineScore.push(inningOutcome[0]);
   			nowBatting2 = inningOutcome[1];
   			console.log("In inning " + i + ", the Mets scored " + inningOutcome[0] + " and due up is Lineup Spot " + inningOutcome[1]);
   		}
@@ -164,9 +168,11 @@ var calcWalksPlusHBP = function(obp, avg){
   		while (team1Score === team2Score){
   			inningOutcome = offensiveInning(team1, nowBatting1);
   			team1Score += inningOutcome[0];
+        team1lineScore.push(inningOutcome[0]);
   			nowBatting1 = inningOutcome[1];
   			inningOutcome = offensiveInning(team2, nowBatting2);
   			team2Score += inningOutcome[0];
+        team2lineScore.push(inningOutcome[0]);
   			nowBatting2 = inningOutcome[1];
   			extraInnings++;
   		}
@@ -182,6 +188,14 @@ var calcWalksPlusHBP = function(obp, avg){
   		else {
   			alert("Tie game. Nats: " + team1Score + " Mets: " + team2Score + ", " + totalInnings + " innings");
   		}
+
+      var lineScoreArray =[];
+      lineScoreArray.push("<tr><th>Team Name</th>");
+      for (var i = 1; i <= totalInnings; i++) {
+        lineScoreArray.push("<th>".concat(i).concat("</th>"));
+      }
+
+      $('#linescore').html(lineScoreArray.join(''));
 
   	}
 
