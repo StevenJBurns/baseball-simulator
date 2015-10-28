@@ -31,7 +31,6 @@ var calcWalksPlusHBP = function(obp, avg){
   	var team2Score = 0;
   	var nowBatting1 = 0;
   	var nowBatting2 = 0;
-  	var extraInnings = 0;
 
   	var single = function(onBase){
   		var scoredThisHit = 0;
@@ -143,7 +142,12 @@ var calcWalksPlusHBP = function(obp, avg){
   	};
 
   	var game = function() {
+      var extraInnings = 0;
   		var inningOutcome = [0,0];
+      team1Score = 0;
+      team2Score = 0;
+      nowBatting1 = 0;
+      nowBatting2 = 0;
   		for (var i = 0; i < numInnings; i++){
   			inningOutcome = offensiveInning(team1,nowBatting1);
   			team1Score += inningOutcome[0];
@@ -181,13 +185,5 @@ var calcWalksPlusHBP = function(obp, avg){
 
   	}
 
-  	game();
-  	// document.write("Hello <br>");
-  	// document.write("Hi");
-  	var node = document.getElementById('node-id');
-	var newNode = document.createElement('p');
-	newNode.appendChild(document.createTextNode('some dynamic html'));
-	//node.appendChild(newNode);
-	var newNode = document.createElement('p');
-	newNode.appendChild(document.createTextNode('more text'));
-	//node.appendChild(newNode);
+    //Run game on click of runButton
+    $('#runButton').click(game);
