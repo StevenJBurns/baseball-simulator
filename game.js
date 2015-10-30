@@ -1,3 +1,5 @@
+const NUM_INNINGS = 9;
+
 var calcWalksPlusHBP = function(obp, avg){
   		walksPlusHBP = [];
   		for (var i = 0; i < 9; i++){
@@ -25,12 +27,6 @@ var team2 = new Object();
   team2.pctDoubles = [0.217, 0.211, 0.213, 0.196, 0.225, 0.287, 0.180, 0.164, 0.167];
   team2.pctTriples = [0.025, 0.016, 0.018, 0.007, 0.006, 0.020, 0.014, 0.016, 0.000];
   team2.pctHomers = [0.051, 0.049, 0.055, 0.175, 0.133, 0.133, 0.115, 0.090, 0.056];
-
-var numInnings = 9;
-var team1Score = 0;
-var team2Score = 0;
-var nowBatting1 = 0;
-var nowBatting2 = 0;
 
 //onBase is a length 3 array containing 0 or 1 in position i if there is a runner on base i
 //returns the new on base setup and the number of runs scored
@@ -146,19 +142,19 @@ var offensiveInning = function(team, nowBatting){
   	var game = function() {
       var extraInnings = 0;
   		var inningOutcome = [0,0];
-      team1Score = 0;
-      team2Score = 0;
-      nowBatting1 = 0;
-      nowBatting2 = 0;
+      var team1Score = 0;
+      var team2Score = 0;
+      var nowBatting1 = 0;
+      var nowBatting2 = 0;
       var team1lineScore = [];
       var team2lineScore = [];
-  		for (var i = 0; i < numInnings; i++){
+  		for (var i = 0; i < NUM_INNINGS; i++){
   			inningOutcome = offensiveInning(team1,nowBatting1);
         team1lineScore.push(inningOutcome[0]);
   			nowBatting1 = inningOutcome[1];
   			console.log("In inning " + i + ", the Nats scored " + inningOutcome[0] + " and due up is Lineup Spot " + inningOutcome[1]);
   		}
-  		for (var i = 0; i < numInnings; i++){
+  		for (var i = 0; i < NUM_INNINGS; i++){
   			inningOutcome = offensiveInning(team2,nowBatting2);
         team2lineScore.push(inningOutcome[0]);
   			nowBatting2 = inningOutcome[1];
