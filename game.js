@@ -1,12 +1,12 @@
 const NUM_INNINGS = 9;
 
 var calcWalksPlusHBP = function(obp, avg){
-  		walksPlusHBP = [];
-  		for (var i = 0; i < 9; i++){
-  			walksPlusHBP[i] = obp[i]-avg[i];
-  		}
-  		return walksPlusHBP;
-  	}
+  walksPlusHBP = [];
+  for (var i = 0; i < 9; i++){
+  	walksPlusHBP[i] = obp[i]-avg[i];
+  }
+  return walksPlusHBP;
+}
 
 var team1 = new Object();
   team1.avg = [.295, .274, .277, .251, .276, .255, .248, .241, .137];
@@ -55,7 +55,7 @@ var single = function(onBase){
  	}
  	onBase[0] = 1;
  	return [onBase, scoredThisHit];
- }
+}
 
 var doubles = function(onBase){
   var scoredThisHit = 0;
@@ -75,23 +75,23 @@ var doubles = function(onBase){
  	return [onBase, scoredThisHit];
 }
 
-  	var triple = function(onBase){
-  		var scoredThisHit = 0;
-  		if (onBase[2] === 1){
-  			onBase[2] = 0;
-  			scoredThisHit++;
-  		}
-  		if (onBase[1] === 1){
-  			onBase[1] = 0;
-  			scoredThisHit++;
-  		}
-  		if (onBase[0] === 1){
-  			onBase[0] = 0;
-  			scoredThisHit++;
-  		}
-  		onBase[2] = 1;
-  		return [onBase, scoredThisHit];
-  	}
+var triple = function(onBase){
+  var scoredThisHit = 0;
+  if (onBase[2] === 1){
+		onBase[2] = 0;
+    scoredThisHit++;
+  }
+  if (onBase[1] === 1){
+  	onBase[1] = 0;
+  	scoredThisHit++;
+  }
+  if (onBase[0] === 1){
+  	onBase[0] = 0;
+		scoredThisHit++;
+  }
+  onBase[2] = 1;
+  return [onBase, scoredThisHit];
+}
 
   	var homer = function(onBase){
   		var scoredThisHit = 0;
@@ -194,6 +194,16 @@ var offensiveInning = function(team, nowBatting, inning){
       team1Score = sum(team1lineScore);
       team2Score = sum(team2lineScore);
 
+      //fill in the rest of each player's inning outcomes with blank if didn't bat
+      for (var i = 0; i < 9; i++){
+        while (team1.playerOutcomes[i].length < totalInnings) {
+          team1.playerOutcomes[i].push("");
+        }
+        while (team2.playerOutcomes[i].length < totalInnings) {
+          team2.playerOutcomes[i].push("");
+        }
+      }
+      
   		if (team1Score > team2Score){
   			alert("Nats win! Nats: " + team1Score + " Mets: " + team2Score + ", " + totalInnings + " innings");
   		}
@@ -225,6 +235,22 @@ var offensiveInning = function(team, nowBatting, inning){
       lineScoreArray.push("<td>".concat(team2Score).concat("</td>"));
       lineScoreArray.push("/tr>");
       $('#linescore').html(lineScoreArray.join(''));
+
+      //format team 1's outcomes into html table
+      var team1Scorebook = [];
+      team1Scorebook.push("<tr><th></th>");
+      for (var i = 1; i <= totalInnings; i++) {
+        team1Scorebook.push("<th>".concat(i).concat("</th>"));
+      }
+      team1Scorebook.push("</tr>");
+      for (var i = 1; i <= 9; i++) {
+        team1Scorebook.push("<tr><td>Player ".concat(i).concat("</td>"));
+        for (var j = 1; j <= totalInnings; j++) {
+          team1Scorebook.push("<td>".concat(team1.playerOutcomes[i-1][j-1]).concat("</td>"));
+        }
+        team1Scorebook.push("</tr>");
+      }
+      $('#team1Scorecard').html(team1Scorebook.join(''));
 
   	}
 
