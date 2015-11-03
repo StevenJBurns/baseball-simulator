@@ -93,102 +93,102 @@ var triple = function(onBase){
   return [onBase, scoredThisHit];
 }
 
-  	var homer = function(onBase){
-  		var scoredThisHit = 0;
-  		for (var i = 0; i < 3; i++){
-  			if (onBase[i] === 1){
-  				scoredThisHit++;
-  			}
-  		}
+var homer = function(onBase){
+	var scoredThisHit = 0;
+ 	for (var i = 0; i < 3; i++){
+  	if (onBase[i] === 1){
   		scoredThisHit++;
-  		onBase = [0,0,0];
-  		return [onBase, scoredThisHit];
   	}
+  }
+  scoredThisHit++;
+  onBase = [0,0,0];
+  return [onBase, scoredThisHit];
+}
 
 var offensiveInning = function(team, nowBatting, inning){
- 		var numOuts = 0;
- 		var scoredThisInning = 0;
- 		var onBase = [0,0,0];
-  	var hitOutcome = [];
-  		while (numOuts < 3){
-        while (team.playerOutcomes[nowBatting].length < inning) {
-          team.playerOutcomes[nowBatting].push(""); //fill in innings since the player's last at bat with blanks
-        }
-  			var atBatOutcome = Math.random();
-  			if (atBatOutcome > team.avg[nowBatting]){
-  				numOuts++;
-          team.playerOutcomes[nowBatting].push("Out");
-  				console.log("Out. On base: " + onBase);
-  			}
-  			else {
-  				var hitType = Math.random();
-  				if (hitType < team.pctSingles[nowBatting]){
-  					hitOutcome = single(onBase);
-  					onBase = hitOutcome[0];
-  					scoredThisInning += hitOutcome[1];
-            team.playerOutcomes[nowBatting].push("1B");
-  					console.log("Single. On base: " + onBase);
-  				}
-  				else if (hitType < team.pctSingles[nowBatting]+team.pctDoubles[nowBatting]){
-  					hitOutcome = doubles(onBase);
-   					onBase = hitOutcome[0];
-  					scoredThisInning += hitOutcome[1];
-            team.playerOutcomes[nowBatting].push("2B");
-  					console.log("Double. On base: " + onBase); 					
-  				}
-  				else if (hitType < team.pctSingles[nowBatting]+team.pctDoubles[nowBatting]+team.pctTriples[nowBatting]){
-  					hitOutcome = triple(onBase);
-   					onBase = hitOutcome[0];
-  					scoredThisInning += hitOutcome[1];
-            team.playerOutcomes[nowBatting].push("3B");
-  					console.log("Triple. On base: " + onBase); 					
-  				}
-  				else {
-  					hitOutcome = homer(onBase);
-   					onBase = hitOutcome[0];
-  					scoredThisInning += hitOutcome[1];
-            team.playerOutcomes[nowBatting].push("HR");
-  					console.log("Homer! On base: " + onBase); 
-  				}  				
-  			}
-  			nowBatting = (nowBatting + 1) % 9;
+ 	var numOuts = 0;
+ 	var scoredThisInning = 0;
+ 	var onBase = [0,0,0];
+  var hitOutcome = [];
+  while (numOuts < 3){
+    while (team.playerOutcomes[nowBatting].length < inning) {
+      team.playerOutcomes[nowBatting].push(""); //fill in innings since the player's last at bat with blanks
+    }
+  	var atBatOutcome = Math.random();
+  	if (atBatOutcome > team.avg[nowBatting]){
+  		numOuts++;
+      team.playerOutcomes[nowBatting].push("Out");
+  		console.log("Out. On base: " + onBase);
+  	}
+  	else {
+  		var hitType = Math.random();
+  		if (hitType < team.pctSingles[nowBatting]){
+  			hitOutcome = single(onBase);
+  			onBase = hitOutcome[0];
+  			scoredThisInning += hitOutcome[1];
+        team.playerOutcomes[nowBatting].push("1B");
+  			console.log("Single. On base: " + onBase);
   		}
-  		return [scoredThisInning, nowBatting];
-  	};
-
-  	var game = function() {
-      clearPlayerOutcomes(team1);
-      clearPlayerOutcomes(team2);
-      var extraInnings = 0;
-  		var inningOutcome = [0,0];
-      var team1Score = 0;
-      var team2Score = 0;
-      var nowBatting1 = 0;
-      var nowBatting2 = 0;
-      var team1lineScore = [];
-      var team2lineScore = [];
-  		for (var i = 0; i < NUM_INNINGS; i++){
-        //inning i, team1
-  			inningOutcome = offensiveInning(team1,nowBatting1,i);
-        team1lineScore.push(inningOutcome[0]);
-  			nowBatting1 = inningOutcome[1];
-  			console.log("In inning " + i + ", the Nats scored " + inningOutcome[0] + " and due up is Lineup Spot " + inningOutcome[1]);
-  		  //inning i, team2    
-        inningOutcome = offensiveInning(team2,nowBatting2,i);
-        team2lineScore.push(inningOutcome[0]);
-        nowBatting2 = inningOutcome[1];
-        console.log("In inning " + i + ", the Mets scored " + inningOutcome[0] + " and due up is Lineup Spot " + inningOutcome[1]);
-      }
-
-  		while (sum(team1lineScore) === sum(team2lineScore)){
-        extraInnings++;
-  			inningOutcome = offensiveInning(team1, nowBatting1, NUM_INNINGS+extraInnings);
-        team1lineScore.push(inningOutcome[0]);
-  			nowBatting1 = inningOutcome[1];
-  			inningOutcome = offensiveInning(team2, nowBatting2, NUM_INNINGS+extraInnings);
-        team2lineScore.push(inningOutcome[0]);
-  			nowBatting2 = inningOutcome[1];
+  		else if (hitType < team.pctSingles[nowBatting]+team.pctDoubles[nowBatting]){
+  			hitOutcome = doubles(onBase);
+   			onBase = hitOutcome[0];
+  			scoredThisInning += hitOutcome[1];
+        team.playerOutcomes[nowBatting].push("2B");
+  			console.log("Double. On base: " + onBase); 					
   		}
+  		else if (hitType < team.pctSingles[nowBatting]+team.pctDoubles[nowBatting]+team.pctTriples[nowBatting]){
+  			hitOutcome = triple(onBase);
+   			onBase = hitOutcome[0];
+  			scoredThisInning += hitOutcome[1];
+        team.playerOutcomes[nowBatting].push("3B");
+  			console.log("Triple. On base: " + onBase); 					
+  		}
+  		else {
+  			hitOutcome = homer(onBase);
+   			onBase = hitOutcome[0];
+  			scoredThisInning += hitOutcome[1];
+        team.playerOutcomes[nowBatting].push("HR");
+  			console.log("Homer! On base: " + onBase); 
+  		}  				
+  	}
+  	nowBatting = (nowBatting + 1) % 9;
+  }
+  return [scoredThisInning, nowBatting];
+};
+
+var game = function() {
+  clearPlayerOutcomes(team1);
+  clearPlayerOutcomes(team2);
+  var extraInnings = 0;
+  var inningOutcome = [0,0];
+  var team1Score = 0;
+  var team2Score = 0;
+  var nowBatting1 = 0;
+  var nowBatting2 = 0;
+  var team1lineScore = [];
+  var team2lineScore = [];
+  for (var i = 0; i < NUM_INNINGS; i++){
+    //inning i, team1
+  	inningOutcome = offensiveInning(team1,nowBatting1,i);
+    team1lineScore.push(inningOutcome[0]);
+  	nowBatting1 = inningOutcome[1];
+  	console.log("In inning " + i + ", the Nats scored " + inningOutcome[0] + " and due up is Lineup Spot " + inningOutcome[1]);
+  	//inning i, team2    
+    inningOutcome = offensiveInning(team2,nowBatting2,i);
+    team2lineScore.push(inningOutcome[0]);
+    nowBatting2 = inningOutcome[1];
+    console.log("In inning " + i + ", the Mets scored " + inningOutcome[0] + " and due up is Lineup Spot " + inningOutcome[1]);
+  }
+
+  while (sum(team1lineScore) === sum(team2lineScore)){
+    extraInnings++;
+  	inningOutcome = offensiveInning(team1, nowBatting1, NUM_INNINGS+extraInnings);
+    team1lineScore.push(inningOutcome[0]);
+  	nowBatting1 = inningOutcome[1];
+  	inningOutcome = offensiveInning(team2, nowBatting2, NUM_INNINGS+extraInnings);
+    team2lineScore.push(inningOutcome[0]);
+  	nowBatting2 = inningOutcome[1];
+  }
 
   		var totalInnings = extraInnings + 9;
       team1Score = sum(team1lineScore);
@@ -203,7 +203,7 @@ var offensiveInning = function(team, nowBatting, inning){
           team2.playerOutcomes[i].push("");
         }
       }
-      
+
   		if (team1Score > team2Score){
   			alert("Nats win! Nats: " + team1Score + " Mets: " + team2Score + ", " + totalInnings + " innings");
   		}
@@ -235,22 +235,8 @@ var offensiveInning = function(team, nowBatting, inning){
       lineScoreArray.push("<td>".concat(team2Score).concat("</td>"));
       lineScoreArray.push("/tr>");
       $('#linescore').html(lineScoreArray.join(''));
-
-      //format team 1's outcomes into html table
-      var team1Scorebook = [];
-      team1Scorebook.push("<tr><th></th>");
-      for (var i = 1; i <= totalInnings; i++) {
-        team1Scorebook.push("<th>".concat(i).concat("</th>"));
-      }
-      team1Scorebook.push("</tr>");
-      for (var i = 1; i <= 9; i++) {
-        team1Scorebook.push("<tr><td>Player ".concat(i).concat("</td>"));
-        for (var j = 1; j <= totalInnings; j++) {
-          team1Scorebook.push("<td>".concat(team1.playerOutcomes[i-1][j-1]).concat("</td>"));
-        }
-        team1Scorebook.push("</tr>");
-      }
-      $('#team1Scorecard').html(team1Scorebook.join(''));
+      $('#team1Scorecard').html(formatOutcome(team1, totalInnings));
+      $('#team2Scorecard').html(formatOutcome(team2, totalInnings));
 
   	}
 
@@ -266,4 +252,22 @@ var sum = function(array) {
     sum += array[i];
   }
   return sum;
+}
+
+//formats player outcomes from given team into string of html code that becomes scorebook table
+var formatOutcome = function(team, totalInnings) {
+  var teamScorebook = [];
+  teamScorebook.push("<tr><th></th>");
+  for (var i = 1; i <= totalInnings; i++) {
+    teamScorebook.push("<th>".concat(i).concat("</th>"));
+  }
+  teamScorebook.push("</tr>");
+  for (var i = 1; i <= 9; i++) {
+    teamScorebook.push("<tr><td>Player ".concat(i).concat("</td>"));
+    for (var j = 1; j <= totalInnings; j++) {
+      teamScorebook.push("<td>".concat(team.playerOutcomes[i-1][j-1]).concat("</td>"));
+    }
+    teamScorebook.push("</tr>");
+  }
+  return teamScorebook.join('');
 }
