@@ -39,68 +39,27 @@ var clearPlayerOutcomes = function(team) {
 
 //onBase is a length 3 array containing 0 or 1 in position i if there is a runner on base i
 //returns the new on base setup and the number of runs scored
-var single = function(onBase){
+var advanceRunners = function(onBase, numBases) {
   var scoredThisHit = 0;
-  if (onBase[2] === 1){
-  	onBase[2] = 0;
-		scoredThisHit++;
- 	}
- 	if (onBase[1] === 1){
- 		onBase[1] = 0;
- 		onBase[2] = 1;
- 	}
- 	if (onBase[0] === 1){
- 		onBase[0] = 0;
- 		onBase[1] = 1;
- 	}
- 	onBase[0] = 1;
- 	return [onBase, scoredThisHit];
-}
-
-var doubles = function(onBase){
-  var scoredThisHit = 0;
-  if (onBase[2] === 1){
-  	onBase[2] = 0;
-  	scoredThisHit++;
+  var i;
+  //runners who score
+  for (i = 2; i > (2-numBases); i--) {
+    scoredThisHit += onBase[i];
   }
- 	if (onBase[1] === 1){
- 		onBase[1] = 0;
- 		scoredThisHit++;
- 	}
- 	if (onBase[0] === 1){
- 		onBase[0] = 0;
- 		onBase[2] = 1;
- 	}
- 	onBase[1] = 1;
- 	return [onBase, scoredThisHit];
-}
-
-var triple = function(onBase){
-  var scoredThisHit = 0;
-  if (onBase[2] === 1){
-		onBase[2] = 0;
-    scoredThisHit++;
+  //runners who advance
+  for (i = 2; i >= numBases; i--) {
+    onBase[i] = onBase[i-numBases];
   }
-  if (onBase[1] === 1){
-  	onBase[1] = 0;
-  	scoredThisHit++;
+  onBase[numBases-1] = 1; //this is the batter who just hit
+  //fill in empty bases behind trail runner
+  for (i = numBases-2; i >= 0; i--) {
+    onBase[i] = 0;
   }
-  if (onBase[0] === 1){
-  	onBase[0] = 0;
-		scoredThisHit++;
-  }
-  onBase[2] = 1;
   return [onBase, scoredThisHit];
 }
 
 var homer = function(onBase){
-	var scoredThisHit = 0;
- 	for (var i = 0; i < 3; i++){
-  	if (onBase[i] === 1){
-  		scoredThisHit++;
-  	}
-  }
-  scoredThisHit++;
+	var scoredThisHit = sum(onBase) + 1;
   onBase = [0,0,0];
   return [onBase, scoredThisHit];
 }
@@ -123,21 +82,21 @@ var offensiveInning = function(team, nowBatting, inning){
   	else {
   		var hitType = Math.random();
   		if (hitType < team.pctSingles[nowBatting]){
-  			hitOutcome = single(onBase);
+  			hitOutcome = advanceRunners(onBase,1);
   			onBase = hitOutcome[0];
   			scoredThisInning += hitOutcome[1];
         team.playerOutcomes[nowBatting].push("1B");
   			console.log("Single. On base: " + onBase);
   		}
   		else if (hitType < team.pctSingles[nowBatting]+team.pctDoubles[nowBatting]){
-  			hitOutcome = doubles(onBase);
+  			hitOutcome = advanceRunners(onBase,2);
    			onBase = hitOutcome[0];
   			scoredThisInning += hitOutcome[1];
         team.playerOutcomes[nowBatting].push("2B");
   			console.log("Double. On base: " + onBase); 					
   		}
   		else if (hitType < team.pctSingles[nowBatting]+team.pctDoubles[nowBatting]+team.pctTriples[nowBatting]){
-  			hitOutcome = triple(onBase);
+  			hitOutcome = advanceRunners(onBase,3);
    			onBase = hitOutcome[0];
   			scoredThisInning += hitOutcome[1];
         team.playerOutcomes[nowBatting].push("3B");
@@ -190,31 +149,31 @@ var game = function() {
   	nowBatting2 = inningOutcome[1];
   }
 
-  		var totalInnings = extraInnings + 9;
-      team1Score = sum(team1lineScore);
-      team2Score = sum(team2lineScore);
+  var totalInnings = extraInnings + 9;
+  team1Score = sum(team1lineScore);
+  team2Score = sum(team2lineScore);
 
-      //fill in the rest of each player's inning outcomes with blank if didn't bat
-      for (var i = 0; i < 9; i++){
-        while (team1.playerOutcomes[i].length < totalInnings) {
-          team1.playerOutcomes[i].push("");
-        }
-        while (team2.playerOutcomes[i].length < totalInnings) {
-          team2.playerOutcomes[i].push("");
-        }
-      }
+  //fill in the rest of each player's inning outcomes with blank if didn't bat
+  for (var i = 0; i < 9; i++){
+    while (team1.playerOutcomes[i].length < totalInnings) {
+      team1.playerOutcomes[i].push("");
+    }
+    while (team2.playerOutcomes[i].length < totalInnings) {
+      team2.playerOutcomes[i].push("");
+    }
+  }
 
-  		if (team1Score > team2Score){
-  			alert("Nats win! Nats: " + team1Score + " Mets: " + team2Score + ", " + totalInnings + " innings");
-  		}
-  		else if (team2Score > team1Score){
-  			alert("Mets win! Nats: " + team1Score + " Mets: " + team2Score + ", " + totalInnings + " innings");
-  		}
-  		else {
-  			alert("Tie game. Nats: " + team1Score + " Mets: " + team2Score + ", " + totalInnings + " innings");
-  		}
+  if (team1Score > team2Score){
+  	alert("Nats win! Nats: " + team1Score + " Mets: " + team2Score + ", " + totalInnings + " innings");
+  }
+  else if (team2Score > team1Score){
+  	alert("Mets win! Nats: " + team1Score + " Mets: " + team2Score + ", " + totalInnings + " innings");
+  }
+  else {
+  	alert("Tie game. Nats: " + team1Score + " Mets: " + team2Score + ", " + totalInnings + " innings");
+  }
 
-      console.log(team1.playerOutcomes);
+  console.log(team1.playerOutcomes);
 
       //format line scores into html table element
       var lineScoreArray =[];
