@@ -1,5 +1,6 @@
 const NUM_INNINGS = 9;
 
+//Calculates walks + hit by pitch for each batter by subtracting OBP and AVG
 var calcWalksPlusHBP = function(obp, avg){
   walksPlusHBP = [];
   for (var i = 0; i < 9; i++){
@@ -8,6 +9,9 @@ var calcWalksPlusHBP = function(obp, avg){
   return walksPlusHBP;
 }
 
+//Batting data for each team using baseballreference.com
+
+//2014 Nats
 var team1 = new Object();
   team1.avg = [.295, .274, .277, .251, .276, .255, .248, .241, .137];
   team1.obp = [.347, .344, .373, .342, .341, .313, .303, .299, .195];
@@ -19,6 +23,7 @@ var team1 = new Object();
   team1.pctHomers = [0.034, 0.095, 0.116, 0.157, 0.121, 0.153, 0.146, 0.078, 0.082];
   team1.playerOutcomes = new Array();
 
+//2014 Mets
 var team2 = new Object();
   team2.avg = [.235, .277, .250, .238, .279, .258, .235, .219, .136];
   team2.obp = [.308, .333, .305, .340, .339, .335, .290, .304, .197];
@@ -30,6 +35,8 @@ var team2 = new Object();
   team2.pctHomers = [0.051, 0.049, 0.055, 0.175, 0.133, 0.133, 0.115, 0.090, 0.056];
   team2.playerOutcomes = new Array();
 
+
+//Resets the outcome of the at-bats for each player
 var clearPlayerOutcomes = function(team) {
   team.playerOutcomes = new Array();
   for (var i = 0; i < 9; i++) {
@@ -64,6 +71,7 @@ var homer = function(onBase){
   return [onBase, scoredThisHit];
 }
 
+//Simulates one offensive inning for the indicated team.
 var offensiveInning = function(team, nowBatting, inning){
  	var numOuts = 0;
  	var scoredThisInning = 0;
@@ -115,6 +123,7 @@ var offensiveInning = function(team, nowBatting, inning){
   return [scoredThisInning, nowBatting];
 };
 
+//Simulates one game between team1 and team2
 var game = function() {
   clearPlayerOutcomes(team1);
   clearPlayerOutcomes(team2);
@@ -126,6 +135,7 @@ var game = function() {
   var nowBatting2 = 0;
   var team1lineScore = [];
   var team2lineScore = [];
+  //First 9 innings
   for (var i = 0; i < NUM_INNINGS; i++){
     //inning i, team1
   	inningOutcome = offensiveInning(team1,nowBatting1,i);
@@ -139,6 +149,7 @@ var game = function() {
     console.log("In inning " + i + ", the Mets scored " + inningOutcome[0] + " and due up is Lineup Spot " + inningOutcome[1]);
   }
 
+  //Extra innings as necessary
   while (sum(team1lineScore) === sum(team2lineScore)){
     extraInnings++;
   	inningOutcome = offensiveInning(team1, nowBatting1, NUM_INNINGS+extraInnings);
@@ -175,34 +186,34 @@ var game = function() {
 
   console.log(team1.playerOutcomes);
 
-      //format line scores into html table element
-      var lineScoreArray =[];
-      lineScoreArray.push("<tr><th>Team Name</th>");
-      for (var i = 1; i <= totalInnings; i++) {
-        lineScoreArray.push("<th>".concat(i).concat("</th>"));
-      }
-      lineScoreArray.push("<th>Total</th>");
-      lineScoreArray.push("</tr><tr><td>Nats</td>");
-      for(var i = 1; i <= totalInnings; i++) {
-        lineScoreArray.push("<td>".concat(team1lineScore[i-1]).concat("</td>"));
-      }
-      lineScoreArray.push("<td>".concat(team1Score).concat("</td>"));
-      lineScoreArray.push("</tr><tr><td>Mets</td>");
-      for(var i = 1; i <= totalInnings; i++) {
-        lineScoreArray.push("<td>".concat(team2lineScore[i-1]).concat("</td>"));
-      }
-      lineScoreArray.push("<td>".concat(team2Score).concat("</td>"));
-      lineScoreArray.push("/tr>");
-      $('#linescore').html(lineScoreArray.join(''));
-      $('#team1Scorecard').html(formatOutcome(team1, totalInnings));
-      $('#team2Scorecard').html(formatOutcome(team2, totalInnings));
+  //format line scores into html table element
+  var lineScoreArray =[];
+  lineScoreArray.push("<tr><th>Team Name</th>");
+  for (var i = 1; i <= totalInnings; i++) {
+    lineScoreArray.push("<th>".concat(i).concat("</th>"));
+  }
+  lineScoreArray.push("<th>Total</th>");
+  lineScoreArray.push("</tr><tr><td>Nats</td>");
+  for(var i = 1; i <= totalInnings; i++) {
+    lineScoreArray.push("<td>".concat(team1lineScore[i-1]).concat("</td>"));
+  }
+  lineScoreArray.push("<td>".concat(team1Score).concat("</td>"));
+  lineScoreArray.push("</tr><tr><td>Mets</td>");
+  for(var i = 1; i <= totalInnings; i++) {
+    lineScoreArray.push("<td>".concat(team2lineScore[i-1]).concat("</td>"));
+  }
+  lineScoreArray.push("<td>".concat(team2Score).concat("</td>"));
+  lineScoreArray.push("/tr>");
+  $('#linescore').html(lineScoreArray.join(''));
+  $('#team1Scorecard').html(formatOutcome(team1, totalInnings));
+  $('#team2Scorecard').html(formatOutcome(team2, totalInnings));
 
-  	}
+}
 
-    //Run game on click of runButton
-    $(document).ready(function() {
-      $('#runButton').click(game);
-    });
+//Run game on click of runButton
+$(document).ready(function() {
+  $('#runButton').click(game);
+});
 
 //returns sum of values of a numeric array
 var sum = function(array) {
