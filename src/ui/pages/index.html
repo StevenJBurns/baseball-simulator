@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <link rel="icon" href="/assets/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="../css/baseball.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"
+      >
+    </script>
+    <script>
+      if (/MSIE|Trident/.test(navigator.userAgent)) location.replace("./no-internet-explorer.html");
+    </script>
+    <script>
+      const handleRunGame = () => alert('Simulate Game');
+      const handleRunInning = () => alert('Simulate Inning');
+
+      $(document).ready(() => {
+        $('#copyrightYear').html(new Date().getFullYear());
+      });
+    </script>
+    <script type="module" src="../index.ts"></script>
+    <title>Baseball Simulator</title>
+  </head>
+  <body>
+    <header>
+      <h1>Baseball Simulator</h1>
+    </header>
+    <hr />
+    <main>
+      <button id="runButton" onclick="handleRunGame()">
+        Simulate Game
+      </button>
+      <button id="runInning" onclick="handleRunInning()">
+        Simulate Inning
+      </button>
+      <table>
+        <tr>
+          <th id="headers"></th>
+        </tr>
+        <tr></tr>
+      </table>
+      <section id="linescore">
+        <section class="linescore-row">
+          <section></section>
+          <section>1</section>
+          <section>2</section>
+          <section>3</section>
+          <section>4</section>
+          <section>5</section>
+          <section>6</section>
+          <section>7</section>
+          <section>8</section>
+          <section>9</section>
+          <section>10</section>
+          <!-- <section>11</section>
+          <section>12</section>
+          <section>13</section>
+          <section>14</section> -->
+        </section>
+        <section id="linescore-visitor" class="linescore-row">
+          <h4>WAS</h4>
+        </section>
+        <section id="linescore-home" class="linescore-row">
+          <h4>NYM</h4>
+        </section>
+      </section>
+      <table id="awayTeamScorecard"></table>
+      <table id="homeTeamScorecard"></table>
+    </main>
+    <hr />
+    <footer>
+      <h5>
+        &copy;&nbsp;<span id="copyrightYear"></span>&nbsp;&bull; Steven J Burns
+      </h5>
+    </footer>
+  </body>
+</html>
